@@ -13,5 +13,5 @@ app.use("/api/products", router);
 
 app.listen(PORT, () => {
   connectDB();
-  console.log("Server start at port " + PORT);
+  console.log("Server start at port http://localhost:" + PORT);
 });
