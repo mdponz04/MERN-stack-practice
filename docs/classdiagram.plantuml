@@ -1,0 +1,107 @@
+@startuml
+class User {
+  - userID: string
+  - name: string
+  - email: string
+  - password: string
+  - bio: string
+  - profilePicture: string
+  - createdAt: DateTime
+  --
+  + register()
+  + login()
+  + editProfile()
+  + viewNotifications()
+}
+
+class Blog {
+  - blogID: string
+  - title: string
+  - content: text
+  - userID: string
+  - categoryID: string
+  - tags: List<string>
+  - headerImage: string
+  - status: string
+  - createdAt: DateTime
+  - updatedAt: DateTime
+  --
+  + createBlog()
+  + editBlog()
+  + deleteBlog()
+  + publishBlog()
+}
+
+class Category {
+  - categoryID: string
+  - name: string
+  --
+  + assignCategory()
+}
+
+class Comment {
+  - commentID: string
+  - blogID: string
+  - userID: string
+  - content: text
+  - parentCommentID: string (nullable)
+  - createdAt: DateTime
+  --
+  + addComment()
+  + replyToComment()
+}
+
+class Like {
+  - likeID: string
+  - blogID: string
+  - userID: string
+  - createdAt: DateTime
+  --
+  + addLike()
+}
+
+class Notification {
+  - notificationID: string
+  - userID: string
+  - message: string
+  - isRead: boolean
+  - createdAt: DateTime
+  --
+  + sendNotification()
+  + markAsRead()
+}
+
+class Admin {
+  - adminID: string
+  - email: string
+  - password: string
+  - role: string
+  --
+  + moderateContent()
+  + manageUsers()
+}
+
+class Analytics {
+  - analyticsID: string
+  - blogID: string
+  - views: int
+  - likesCount: int
+  - commentsCount: int
+  - createdAt: DateTime
+  --
+  + trackViews()
+  + trackEngagement()
+}
+
+User "1" -- "0..*" Blog : "creates"
+User "1" -- "0..*" Comment : "leaves"
+User "1" -- "0..*" Like : "likes"
+User "1" -- "0..*" Notification : "receives"
+Blog "1" -- "0..*" Comment : "has"
+Blog "1" -- "0..*" Like : "has"
+Blog "1" -- "1" Category : "belongs to"
+Blog "1" -- "1" Analytics : "tracked by"
+Comment "0..1" -- "0..*" Comment : "replies to"
+Admin "1" -- "0..*" Blog : "moderates"
+Admin "1" -- "0..*" Comment : "moderates"
+@enduml

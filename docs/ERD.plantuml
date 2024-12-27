@@ -1,0 +1,87 @@
+@startuml
+entity "Users" {
+  * UserID : PK
+  --
+  Name
+  Email
+  Password
+  Bio
+  ProfilePicture
+  CreatedAt
+}
+
+entity "Blogs" {
+  * BlogID : PK
+  --
+  Title
+  Content
+  UserID : FK
+  CategoryID : FK
+  Tags
+  HeaderImage
+  Status
+  CreatedAt
+  UpdatedAt
+}
+
+entity "Categories" {
+  * CategoryID : PK
+  --
+  Name
+}
+
+entity "Comments" {
+  * CommentID : PK
+  --
+  BlogID : FK
+  UserID : FK
+  Content
+  ParentCommentID : FK (nullable)
+  CreatedAt
+}
+
+entity "Likes" {
+  * LikeID : PK
+  --
+  BlogID : FK
+  UserID : FK
+  CreatedAt
+}
+
+entity "Notifications" {
+  * NotificationID : PK
+  --
+  UserID : FK
+  Message
+  IsRead
+  CreatedAt
+}
+
+entity "Admin" {
+  * AdminID : PK
+  --
+  Email
+  Password
+  Role
+}
+
+entity "Analytics" {
+  * AnalyticsID : PK
+  --
+  BlogID : FK
+  Views
+  LikesCount
+  CommentsCount
+  CreatedAt
+}
+
+Users ||--o{ Blogs : "creates"
+Users ||--o{ Comments : "leaves"
+Users ||--o{ Likes : "likes"
+Users ||--o{ Notifications : "receives"
+Blogs ||--o{ Comments : "has"
+Blogs ||--o{ Likes : "has"
+Blogs ||--|| Analytics : "tracked by"
+Blogs }o--|| Categories : "belongs to"
+Comments ||--o| Comments : "replies to"
+@enduml

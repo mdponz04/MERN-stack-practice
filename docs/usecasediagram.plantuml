@@ -1,0 +1,39 @@
+@startuml
+actor "User" as user
+actor "Admin" as admin
+actor "Visitor" as visitor
+
+usecase "Register/Login" as UC1
+usecase "Edit Profile" as UC2
+usecase "Create Blog" as UC3
+usecase "Edit/Delete Blog" as UC4
+usecase "View Blog" as UC5
+usecase "Comment on Blog" as UC6
+usecase "Like Blog" as UC7
+usecase "Share Blog" as UC8
+usecase "Search Blogs" as UC9
+usecase "Moderate Content" as UC10
+usecase "Manage Users" as UC11
+usecase "View Notifications" as UC12
+usecase "View Analytics" as UC13
+
+user --> UC1
+user --> UC2
+user --> UC3
+user --> UC4
+user --> UC6
+user --> UC7
+user --> UC8
+user --> UC12
+user --> UC13
+
+visitor --> UC5
+visitor --> UC9
+
+admin --> UC10
+admin --> UC11
+
+UC4 <-- UC10 : "Approval/Moderation"
+UC6 <-- UC10 : "Comment Moderation"
+UC1 <-- admin : "Reset Password"
+@enduml
