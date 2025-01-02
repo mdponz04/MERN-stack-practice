@@ -5,8 +5,9 @@ import { connectDB } from "./config/db.js";
 import router from "./routes/Route.js";
 
 dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 app.use(express.json); //This allow us to accept JSON data in the req.body
 app.use("/api", router);
