@@ -1,31 +1,40 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const authenticate = async (req, res, next) => {
+const sendError = (res, statusCode, message) => {
+    res.status(statusCode).json({ message });
+};
+
+export const authenticate = async (req, res, next) => {
     try {
-        // Get the token from the Authorization header
-        const token = req.headers.authorization?.split(" ")[1];
+        const token =
+            req.cookies.token || req.headers.authorization?.split(" ")[1];
+        if (!token)
+            return sendError(res, 401, "Access denied. No token provided.");
 
-        if (!token) {
-            return res
-                .status(401)
-                .json({ message: "Access denied. No token provided." });
-        }
+        const decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET,
+            (err, decoded) => {
+                if (err && err.name === "TokenExpiredError") {
+                    return sendError(
+                        res,
+                        401,
+                        "Token expired. Please log in again."
+                    );
+                }
+                if (err) return sendError(res, 401, "Invalid token.");
+                return decoded;
+            }
+        );
 
-        // Verify the token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        // Fetch the user and attach it to the request object
         const user = await User.findById(decoded.id).select("-password");
-        if (!user) {
-            return res.status(404).json({ message: "User not found." });
-        }
+        if (!user) return sendError(res, 404, "User not found.");
 
         req.user = user;
         next();
     } catch (error) {
-        res.status(401).json({ message: "Invalid or expired token." });
+        console.error("Authentication Error:", error.message);
+        sendError(res, 401, "Authentication failed.");
     }
 };
-
-export default authenticate;

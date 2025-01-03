@@ -4,6 +4,7 @@ import User from "../models/User.js";
 
 export const registerUser = async (req, res) => {
     try {
+        console.log("Request received for registration");
         const { name, email, password } = req.body;
 
         // Check if email already exists
@@ -49,6 +50,13 @@ export const loginUser = async (req, res) => {
             expiresIn: "1h",
         });
 
+        //return cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            // secure: true,
+            // maxAge: 100000,
+            // signed: true,
+        });
         res.status(200).json({ message: "Login successful", token, user });
     } catch (error) {
         res.status(500).json({ message: "Server error", error });

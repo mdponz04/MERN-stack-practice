@@ -4,7 +4,7 @@ import {
     registerUser,
     updateUserProfile,
 } from "../controllers/userController.js";
-import authenticate from "../middleware/authMiddleware.js";
+import { authenticate } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
